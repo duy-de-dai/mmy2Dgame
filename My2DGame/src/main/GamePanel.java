@@ -14,7 +14,7 @@ public class GamePanel extends JPanel implements Runnable{
     final int screenWidth=maxScreenCol*tileSize;//768 pixels
     final int screenHeight=maxScreenRow*tileSize;//576 pixels
     final int playerSpeed=1;
-    int FPS=60;
+    long lastTime = System.currentTimeMillis();
     KeyHandler keyH= new KeyHandler();
     Thread gameThread;
 
@@ -37,21 +37,30 @@ public class GamePanel extends JPanel implements Runnable{
 
     @Override
     public void run() {
-       // double drawInterval = 1000000000/FPS;
-       // double nextDrawTime= System.nanoTime() + drawInterval;
+       /*double drawInterval = 1000000000/FPS;
+       double nextDrawTime= System.nanoTime() + drawInterval;
         while (gameThread!= null){
 
             update(); // update information such as charater positions
 
             repaint(); // draw screen with update infomation
 
-           /* try {
+           try {
                 double remainingTime= nextDrawTime-System.nanoTime();
                 Thread.sleep((long) (remainingTime/1000000));
                 nextDrawTime += drawInterval;
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            } */
+            }
+        }*/
+
+        while (gameThread != null) {
+            long curr = System.currentTimeMillis();
+            if(curr - lastTime  > 10) {
+                update();
+                repaint();
+                lastTime = curr;
+            }
         }
     }
 
@@ -60,6 +69,7 @@ public class GamePanel extends JPanel implements Runnable{
             if (keyH.downPressed)  playerY+=playerSpeed;
             if (keyH.rightPressed)  playerX+=playerSpeed;
             if (keyH.leftPressed)  playerX-=playerSpeed;
+
 
         }
     public void paintComponent(Graphics g){                         //ghi đè
